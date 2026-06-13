@@ -1,0 +1,121 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 1. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // 2. Global Safety Helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // 3. Collection Rule matching
+
+    // Users Database
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isOwner(userId) && 
+                    incoming().keys().hasAll(['uid', 'displayName', 'email', 'role']) &&
+                    incoming().role in ['member', 'super_admin', 'cell_leader', 'pastor'];
+      allow update: if isSignedIn() && isOwner(userId) && 
+                    (incoming().role == existing().role || 
+                     (incoming().role == 'cell_leader' && get(/databases/$(database)/documents/cells/$(incoming().cellId)).data.leaderId == request.auth.uid));
+      allow delete: if isSignedIn() && isOwner(userId);
+    }
+
+    // Cell Groups
+    match /cells/{cellId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update: if isSignedIn();
+      allow delete: if isSignedIn();
+    }
+
+    // Feed Posts
+    match /posts/{postId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && incoming().authorId == request.auth.uid;
+      allow update: if isSignedIn();
+      allow delete: if isSignedIn() && (existing().authorId == request.auth.uid);
+    }
+
+    // Chat Messages
+    match /messages/{messageId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && incoming().senderId == request.auth.uid;
+      allow update: if isSignedIn() && existing().senderId == request.auth.uid;
+      allow delete: if isSignedIn() && existing().senderId == request.auth.uid;
+    }
+
+    // Prayer Requests
+    match /prayers/{prayerId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && incoming().userId == request.auth.uid;
+      allow update: if isSignedIn();
+      allow delete: if isSignedIn() && existing().userId == request.auth.uid;
+    }
+
+    // Parish Events
+    match /events/{eventId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update: if isSignedIn();
+      allow delete: if isSignedIn();
+    }
+
+    // Shared teaching resources
+    match /resources/{resId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && incoming().uploadedBy == request.auth.uid;
+      allow update: if isSignedIn() && existing().uploadedBy == request.auth.uid;
+      allow delete: if isSignedIn() && existing().uploadedBy == request.auth.uid;
+    }
+
+    // Devotional scripts
+    match /devotionals/{devoId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && incoming().uploadedBy == request.auth.uid;
+      allow update: if isSignedIn() && existing().uploadedBy == request.auth.uid;
+      allow delete: if isSignedIn() && existing().uploadedBy == request.auth.uid;
+    }
+
+    // Individual notification inboxes
+    match /notifications/{notifId} {
+      allow read: if isSignedIn() && existing().userId == request.auth.uid;
+      allow create: if isSignedIn() && incoming().userId == request.auth.uid;
+      allow update: if isSignedIn() && existing().userId == request.auth.uid;
+      allow delete: if isSignedIn() && existing().userId == request.auth.uid;
+    }
+
+    // Admins Q&A rules library
+    match /qaLibrary/{ruleId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn();
+    }
+
+    // Main App Config Theme records
+    match /appConfig/{docId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn();
+    }
+  }
+}

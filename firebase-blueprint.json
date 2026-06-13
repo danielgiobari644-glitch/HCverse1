@@ -1,0 +1,181 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Complete profile metadata stored for each verified believer.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Unique authenticated user ID." },
+        "displayName": { "type": "string", "description": "Display name of the user." },
+        "email": { "type": "string", "description": "Verified email address." },
+        "role": { "type": "string", "enum": ["member", "cell_leader", "pastor", "super_admin"] },
+        "cellId": { "type": "string", "description": "Belonging cell group ID." },
+        "bio": { "type": "string", "description": "Brief autobiography or witness." },
+        "location": { "type": "string", "description": "Geographic parish city or region." },
+        "phone": { "type": "string", "description": "Contact cellular number." },
+        "devotionStreak": { "type": "number", "description": "Streak tracking consecutive days." },
+        "quizScore": { "type": "number", "description": "Max scoring record." },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "displayName", "email", "role"]
+    },
+    "CellGroup": {
+      "title": "CellGroup",
+      "description": "Weekly gathering home cell cohort details.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string", "description": "Title of the Cell group." },
+        "description": { "type": "string", "description": "Mission synopsis." },
+        "tags": { "type": "array" },
+        "leaderId": { "type": "string", "description": "Assigned supervisor leader ID." },
+        "leaderName": { "type": "string" },
+        "pastorName": { "type": "string" },
+        "contactEmail": { "type": "string" },
+        "suspended": { "type": "boolean", "description": "Inactivity toggle by Super Admin." },
+        "meetingSchedule": { "type": "object" },
+        "location": { "type": "object" },
+        "memberCount": { "type": "number" },
+        "memberIds": { "type": "array" }
+      },
+      "required": ["name", "leaderId", "suspended"]
+    },
+    "Post": {
+      "title": "Post",
+      "description": "Timeline posting written by community members.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "content": { "type": "string" },
+        "type": { "type": "string", "enum": ["witness", "testimony", "announcement"] },
+        "authorId": { "type": "string" },
+        "authorName": { "type": "string" },
+        "authorRole": { "type": "string" },
+        "pinnedBy": { "type": "string" },
+        "reactions": { "type": "object" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["content", "type", "authorId", "createdAt"]
+    },
+    "Message": {
+      "title": "Message",
+      "description": "Live sanctuary messages.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "content": { "type": "string" },
+        "senderId": { "type": "string" },
+        "senderName": { "type": "string" },
+        "senderRole": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["content", "senderId", "createdAt"]
+    },
+    "PrayerNeed": {
+      "title": "PrayerNeed",
+      "description": "Prayer circle concerns shared for intercession.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "content": { "type": "string" },
+        "category": { "type": "string" },
+        "urgency": { "type": "string", "enum": ["standard", "urgent"] },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "prayerCount": { "type": "number" },
+        "prayedBy": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["content", "category", "userId", "createdAt"]
+    },
+    "Event": {
+      "title": "Event",
+      "description": "Congregation services, study times, and cell prayer sessions.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "date": { "type": "string" },
+        "time": { "type": "string" },
+        "location": { "type": "string" },
+        "type": { "type": "string" },
+        "cellId": { "type": "string" },
+        "attendeeCount": { "type": "number" },
+        "attendeeIds": { "type": "array" }
+      },
+      "required": ["title", "date", "time", "location"]
+    },
+    "ResourceFile": {
+      "title": "ResourceFile",
+      "description": "Resource outline studies, teachings, and instructional materials.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "type": { "type": "string", "enum": ["document", "image", "video", "link"] },
+        "url": { "type": "string" },
+        "uploadedBy": { "type": "string" },
+        "uploadedByName": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "type", "url", "uploadedBy", "createdAt"]
+    },
+    "Devotional": {
+      "title": "Devotional",
+      "description": "Parish devotional scriptural transcripts.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "scriptureRef": { "type": "string" },
+        "author": { "type": "string" },
+        "uploadedBy": { "type": "string" },
+        "cellId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "content", "scriptureRef", "uploadedBy", "createdAt"]
+    },
+    "NotificationAlert": {
+      "title": "NotificationAlert",
+      "description": "Inbox notifications dispatched to individuals.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "read": { "type": "boolean" },
+        "link": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "title", "message", "read", "createdAt"]
+    },
+    "QaRule": {
+      "title": "QaRule",
+      "description": "Precompiled trigger rule questions loaded in companion configuration.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "keywords": { "type": "string" },
+        "answer": { "type": "string" }
+      },
+      "required": ["keywords", "answer"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": { "schema": "UserProfile", "description": "Profile data for users." },
+    "/cells/{cellId}": { "schema": "CellGroup", "description": "Details of Cell Groups." },
+    "/posts/{postId}": { "schema": "Post", "description": "Main Feed Testimony Share board." },
+    "/messages/{messageId}": { "schema": "Message", "description": "Unified Community Chat Room messages." },
+    "/prayers/{prayerId}": { "schema": "PrayerNeed", "description": "Intercessions prayer concerns submitted." },
+    "/events/{eventId}": { "schema": "Event", "description": "Unified Parish calendar events." },
+    "/resources/{resId}": { "schema": "ResourceFile", "description": "Instructional teaching file directories." },
+    "/devotionals/{devoId}": { "schema": "Devotional", "description": "Spiritual reading library." },
+    "/notifications/{notifId}": { "schema": "NotificationAlert", "description": "Individual push message feeds." },
+    "/qaLibrary/{ruleId}": { "schema": "QaRule", "description": "Pre-paired companion wisdom arrays." },
+    "/appConfig/theme": { "schema": "object", "description": "Global congregational color theme synchronizer." }
+  }
+}
