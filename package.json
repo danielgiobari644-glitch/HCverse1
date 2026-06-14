@@ -4,10 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "node server.js",
-    "build": "vite build && esbuild server.js --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs",
+    "dev": "node build.js && node dist/server.cjs",
+    "build": "node build.js",
     "start": "node dist/server.cjs",
-    "clean": "rm -rf dist server.js",
+    "clean": "rm -rf dist",
     "lint": "echo 'Vanilla JS - no lint required'"
   },
   "dependencies": {
@@ -25,6 +25,7 @@
     "zustand": "^5.0.14"
   },
   "devDependencies": {
+    "@tailwindcss/cli": "^4.3.1",
     "@types/express": "^4.17.21",
     "@types/node": "^22.14.0",
     "autoprefixer": "^10.4.21",
