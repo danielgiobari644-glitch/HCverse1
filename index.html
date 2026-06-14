@@ -78,6 +78,22 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Compiled layout stylesheets -->
+    <link rel="stylesheet" href="./index.css" />
+    <!-- PWA Application Manifest specifications -->
+    <link rel="manifest" href="./manifest.json" />
+
+    <!-- Service Worker background sync & offline cache activation -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js')
+            .then(reg => console.log('[PWA] ServiceWorker registered scope:', reg.scope))
+            .catch(err => console.warn('[PWA] ServiceWorker register failed:', err));
+        });
+      }
+    </script>
   </head>
   <body class="bg-[#07070B] text-white antialiased min-h-screen font-['Inter',_sans-serif] selection:bg-purple-500/30 selection:text-white">
     <!-- Ambient backgrounds: Celestial Moving Beams & Depth layers -->
@@ -132,6 +148,6 @@
       </div>
     </div>
 
-    <script type="module" src="/src/main.js"></script>
+    <script type="module" src="./main.js"></script>
   </body>
 </html>

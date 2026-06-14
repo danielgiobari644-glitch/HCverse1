@@ -131,6 +131,24 @@ Use Markdown formatting beautifully: wrap Bible references in bold, like **Prove
     }
   });
 
+  // Direct APK Download mock endpoint
+  app.get("/api/download/hcverse-app.apk", (req, res) => {
+    res.setHeader("Content-Disposition", "attachment; filename=hcverse_app.apk");
+    res.setHeader("Content-Type", "application/vnd.android.package-archive");
+    // Send a 1KB template stream of bytes acting as real APK download file
+    const dummyApk = Buffer.alloc(1024, "HCVerse Progressive Web App Android Wrapper Package Sandbox Binary");
+    res.send(dummyApk);
+  });
+
+  // Direct ZIP study package companion mock endpoint
+  app.get("/api/download/offline-study-guide.zip", (req, res) => {
+    res.setHeader("Content-Disposition", "attachment; filename=hcverse_offline_bible.zip");
+    res.setHeader("Content-Type", "application/zip");
+    // Send a 1KB template stream/data acting as real ZIP bundle download file
+    const dummyZip = Buffer.alloc(1024, "HCVerse Holy Study Guide Offline scriptures database zip resource packet");
+    res.send(dummyZip);
+  });
+
   // Serve Frontend assets statically out of compiled dist/ folder directly
   const distPath = path.join(process.cwd(), "dist");
   app.use(express.static(distPath));

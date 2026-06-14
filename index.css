@@ -1,0 +1,392 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-sidebar: var(--sidebar);
+  --color-spiritual: var(--spiritual);
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --font-serif: "Space Grotesk", sans-serif;
+}
+
+@layer base {
+  :root {
+    --background: #FCFCFD;
+    --foreground: #09090B;
+    --card: rgba(255, 255, 255, 0.82);
+    --card-foreground: #09090B;
+    --primary: #A78BFA;
+    --primary-foreground: #FCFCFD;
+    --secondary: #F4F4F5;
+    --muted: #F4F4F5;
+    --muted-foreground: #71717A;
+    --destructive: #EF4444;
+    --border: rgba(167, 139, 250, 0.1);
+    --input: rgba(167, 139, 250, 0.1);
+    --ring: #A78BFA;
+    --spiritual: #A78BFA;      /* Primary accent */
+    --spiritual-light: #C4B5FD;
+    --spiritual-dark: #7C3AED;
+    --gold: #F59E0B;
+    --worship: #3B82F6;
+    --grace: #10B981;
+    --faith: #EC4899;
+    --divine: #6366f1;
+    --glass: rgba(255, 255, 255, 0.7);
+    --glass-strong: rgba(255, 255, 255, 0.9);
+    --sidebar: #FCFCFD;
+    --sidebar-primary: #A78BFA;
+  }
+
+  .dark {
+    --background: #080714;
+    --foreground: #FFFFFF;
+    --card: #0d0b1f;
+    --card-foreground: #FFFFFF;
+    --primary: #A78BFA;
+    --primary-foreground: #080714;
+    --secondary: #0d0b1f;
+    --muted: #17142b;
+    --muted-foreground: #A1A1AA;
+    --destructive: #EF4444;
+    --border: rgba(167, 139, 250, 0.08);
+    --input: rgba(167, 139, 250, 0.08);
+    --ring: #A78BFA;
+    --spiritual: #A78BFA;
+    --spiritual-light: #C4B5FD;
+    --spiritual-dark: #7C3AED;
+    --glass: rgba(13, 11, 31, 0.65);
+    --glass-strong: rgba(17, 14, 41, 0.88);
+    --sidebar: #0b0918;
+    --sidebar-primary: #A78BFA;
+  }
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(124, 58, 237, 0.12);
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(124, 58, 237, 0.25);
+}
+
+/* Glassmorphism utility classes */
+.glass {
+  background: var(--glass);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--border);
+}
+
+.glass-strong {
+  background: var(--glass-strong);
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  border: 1px solid var(--border);
+}
+
+/* Dynamic Gradients */
+.bg-gradient-spiritual {
+  background: linear-gradient(135deg, #7c3aed, #a78bfa, #c084fc);
+}
+.bg-gradient-worship {
+  background: linear-gradient(135deg, #3b82f6, #60a5fa, #93c5fd);
+}
+.bg-gradient-grace {
+  background: linear-gradient(135deg, #10b981, #34d399, #6ee7b7);
+}
+.bg-gradient-faith {
+  background: linear-gradient(135deg, #ec4899, #f472b6, #f9a8d4);
+}
+.bg-gradient-divine {
+  background: linear-gradient(135deg, #6366f1, #818cf8, #a5b4fc);
+}
+.bg-gradient-gold {
+  background: linear-gradient(135deg, #d97706, #f59e0b, #fbbf24);
+}
+
+/* Interactivity and elevation */
+.hover-lift {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s;
+}
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(124, 58, 237, 0.15);
+}
+
+.btn-press {
+  transition: transform 0.1s;
+}
+.btn-press:active {
+  transform: scale(0.97);
+}
+
+.card-glow {
+  transition: box-shadow 0.2s;
+}
+.card-glow:hover {
+  box-shadow: 0 0 20px 2px rgba(124, 58, 237, 0.15);
+}
+
+/* Animations */
+@keyframes orbFloat1 {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.95);
+  }
+}
+@keyframes orbFloat2 {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  50% {
+    transform: translate(-40px, 40px) scale(0.9);
+  }
+}
+@keyframes orbFloat3 {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  40% {
+    transform: translate(25px, 25px) scale(1.15);
+  }
+}
+
+.animate-orb1 {
+  animation: orbFloat1 15s ease-in-out infinite;
+}
+.animate-orb2 {
+  animation: orbFloat2 18s ease-in-out infinite;
+}
+.animate-orb3 {
+  animation: orbFloat3 20s ease-in-out infinite;
+}
+
+@keyframes floatAnim {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+.animate-float {
+  animation: floatAnim 3s ease-in-out infinite;
+}
+
+@keyframes breatheAnim {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.95;
+  }
+  50% {
+    transform: scale(1.04);
+    opacity: 1;
+  }
+}
+.animate-breathe {
+  animation: breatheAnim 2.5s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(0.98);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.02);
+  }
+}
+.animate-glow-pulse {
+  animation: glowPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes fadeUpAnim {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-up {
+  animation: fadeUpAnim 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideInRightAnim {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.animate-slide-in-right {
+  animation: slideInRightAnim 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes typingDot {
+  0%, 100% {
+    opacity: 0.2;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-4px);
+  }
+}
+.animate-typing-dot {
+  animation: typingDot 1.4s infinite;
+}
+
+/* Custom visual styles */
+.rounded-full-soft {
+  border-radius: 50%;
+}
+
+/* Very smooth typography and text wipe animations */
+.text-animation-smooth {
+  animation: smoothTextAnim 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes smoothTextAnim {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+    letter-spacing: -0.02em;
+    filter: blur(1px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    letter-spacing: normal;
+    filter: none;
+  }
+}
+
+.text-gradient-shimmer {
+  background: linear-gradient(135deg, #f59e0b 0%, #ffffff 50%, #a78bfa 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textShimmer 4s ease infinite;
+}
+
+@keyframes textShimmer {
+  0% { background-position: 0% 50% }
+  50% { background-position: 100% 50% }
+  100% { background-position: 0% 50% }
+}
+
+/* Premium Tech Grid and Smooth Motion Aesthetics */
+.dark-tech-grid {
+  background-color: #080714;
+  background-image: 
+    radial-gradient(rgba(167, 139, 250, 0.04) 1px, transparent 1.5px);
+  background-size: 28px 28px;
+  position: relative;
+}
+
+.dark-tech-grid::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% -20%, rgba(124, 58, 237, 0.12) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Sophisticated interactive visual feedback */
+.neo-glow-card {
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(167, 139, 250, 0.08);
+  background: rgba(13, 11, 31, 0.6);
+}
+
+.neo-glow-card:hover {
+  border-color: rgba(167, 139, 250, 0.25);
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 
+    0 12px 40px -12px rgba(124, 58, 237, 0.18),
+    0 0 20px -2px rgba(167, 139, 250, 0.05);
+}
+
+.glow-btn-primary {
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 20px -4px rgba(124, 58, 237, 0.4);
+}
+
+.glow-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 8px 28px -2px rgba(124, 58, 237, 0.55),
+    0 0 15px rgba(167, 139, 250, 0.2);
+}
+
+.glow-btn-secondary {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(167, 139, 250, 0.15);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glow-btn-secondary:hover {
+  background: rgba(167, 139, 250, 0.08);
+  border-color: rgba(167, 139, 250, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Dynamic float up reactions animate style */
+.animate-spin-float {
+  animation: floatUpAndFade 2.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  position: absolute;
+}
+
+@keyframes floatUpAndFade {
+  0% {
+    bottom: 0%;
+    opacity: 0;
+    transform: translateY(0) scale(0.5) rotate(0deg);
+  }
+  15% {
+    opacity: 1;
+    transform: translateY(-20px) scale(1.1) rotate(-8deg);
+  }
+  50% {
+    transform: translateY(-120px) scale(1) rotate(8deg);
+  }
+  100% {
+    bottom: 75%;
+    opacity: 0;
+    transform: translateY(-260px) scale(0.7) rotate(-12deg);
+  }
+}
+
+

@@ -22,7 +22,7 @@ fs.mkdirSync(DIST_DIR, { recursive: true });
 // 2. Compile CSS via Tailwind CLI
 console.log('Compiling stylesheet via Tailwind CLI...');
 try {
-  execSync('npx @tailwindcss/cli -i src/index.css -o dist/index.css --minify', { stdio: 'inherit' });
+  execSync('npx @tailwindcss/cli -i index.css -o dist/index.css --minify', { stdio: 'inherit' });
   console.log('Tailwind compiled successfully.');
 } catch (error) {
   console.error('Tailwind compilation failed, continuing with fallback:', error);
@@ -32,7 +32,7 @@ try {
 console.log('Bundling client-side scripts via esbuild...');
 try {
   esbuild.buildSync({
-    entryPoints: [path.join(PROJECT_ROOT, 'src/main.js')],
+    entryPoints: [path.join(PROJECT_ROOT, 'main.js')],
     bundle: true,
     minify: true,
     sourcemap: true,
@@ -77,11 +77,11 @@ try {
 console.log('Deploying static PWA modules...');
 try {
   fs.copyFileSync(
-    path.join(PROJECT_ROOT, 'src/manifest.json'),
+    path.join(PROJECT_ROOT, 'manifest.json'),
     path.join(DIST_DIR, 'manifest.json')
   );
   fs.copyFileSync(
-    path.join(PROJECT_ROOT, 'src/sw.js'),
+    path.join(PROJECT_ROOT, 'sw.js'),
     path.join(DIST_DIR, 'sw.js')
   );
   console.log('Copied manifest.json and sw.js to dist/');
@@ -90,35 +90,13 @@ try {
 }
 
 // 6. Preprocess index.html to load dist sources & register Service Worker
-console.log('Preprocessing index.html into dist...');
+console.log('Preprocessing index.html...');
 try {
   let html = fs.readFileSync(path.join(PROJECT_ROOT, 'index.html'), 'utf8');
   
-  // Replace the module entry point link with the single bundled main.js resource
-  html = html.replace('/src/main.js', '/main.js');
-
-  // Inject CSS reference tag and PWA Manifest in head tag
-  const injectHead = `
-    <!-- Compiled responsive CSS styles -->
-    <link rel="stylesheet" href="/index.css" />
-    <link rel="manifest" href="/manifest.json" />
-    
-    <!-- PWA Registration support -->
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js')
-            .then(reg => console.log('[PWA] ServiceWorker registered scope:', reg.scope))
-            .catch(err => console.warn('[PWA] ServiceWorker register failed:', err));
-        });
-      }
-    </script>
-  </head>
-  `;
-  html = html.replace('</head>', injectHead);
-
+  // Save preprocessed directly as-is to dist as well
   fs.writeFileSync(path.join(DIST_DIR, 'index.html'), html, 'utf8');
-  console.log('index.html integrated into dist/ successfully.');
+  console.log('index.html integrated successfully.');
 } catch (error) {
   console.error('HTML preprocessing failed:', error);
   process.exit(1);
