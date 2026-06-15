@@ -3,20 +3,26 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-const CACHE_NAME = 'hcverse-pwa-cache-v1';
+const CACHE_NAME = 'hcverse-pwa-cache-v2';
 const ASSETS_TO_CACHE = [
-  '/',
-  '/index.html',
-  '/main.js',
-  '/index.css',
-  '/manifest.json'
+  './',
+  './index.html',
+  './bundle.js',
+  './bundle.css',
+  './manifest.json'
 ];
 
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
-      console.log('[HCVerse ServiceWorker] Pre-caching offline pages');
-      return cache.addAll(ASSETS_TO_CACHE);
+      console.log('[HCVerse ServiceWorker] Pre-caching offline pages (resilient)');
+      // Resiliently add assets one-by-one so any individual 404 does not crash install
+      const cachePromises = ASSETS_TO_CACHE.map(url => {
+        return cache.add(url).catch(err => {
+          console.warn(`[HCVerse ServiceWorker] Asset cache skipped: ${url}`, err);
+        });
+      });
+      return Promise.all(cachePromises);
     }).then(() => self.skipWaiting())
   );
 });
@@ -74,7 +80,7 @@ self.addEventListener('fetch', event => {
       }).catch(() => {
         // Fallback to cached index.html for SPA router support when user is totally offline
         if (event.request.headers.get('accept').includes('text/html')) {
-          return caches.match('/index.html');
+          return caches.match('./index.html');
         }
       });
     })

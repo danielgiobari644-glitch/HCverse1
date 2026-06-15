@@ -22,7 +22,8 @@ fs.mkdirSync(DIST_DIR, { recursive: true });
 // 2. Compile CSS via Tailwind CLI
 console.log('Compiling stylesheet via Tailwind CLI...');
 try {
-  execSync('npx @tailwindcss/cli -i index.css -o dist/index.css --minify', { stdio: 'inherit' });
+  execSync('npx @tailwindcss/cli -i index.css -o dist/bundle.css --minify', { stdio: 'inherit' });
+  fs.copyFileSync(path.join(DIST_DIR, 'bundle.css'), path.join(PROJECT_ROOT, 'bundle.css'));
   console.log('Tailwind compiled successfully.');
 } catch (error) {
   console.error('Tailwind compilation failed, continuing with fallback:', error);
@@ -36,7 +37,7 @@ try {
     bundle: true,
     minify: true,
     sourcemap: true,
-    outfile: path.join(DIST_DIR, 'main.js'),
+    outfile: path.join(DIST_DIR, 'bundle.js'),
     format: 'esm',
     target: ['es2020', 'chrome80', 'safari12'],
     external: ['*.css'],
@@ -49,6 +50,10 @@ try {
       'process.env.NODE_ENV': '"production"'
     }
   });
+  fs.copyFileSync(path.join(DIST_DIR, 'bundle.js'), path.join(PROJECT_ROOT, 'bundle.js'));
+  if (fs.existsSync(path.join(DIST_DIR, 'bundle.js.map'))) {
+    fs.copyFileSync(path.join(DIST_DIR, 'bundle.js.map'), path.join(PROJECT_ROOT, 'bundle.js.map'));
+  }
   console.log('Client-side script bundled successfully.');
 } catch (error) {
   console.error('Client compilation failed:', error);

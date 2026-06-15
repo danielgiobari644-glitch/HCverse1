@@ -703,7 +703,7 @@ async function askSpiritualCompanion(promptText) {
   try {
     const contextHistory = state.aiMessages.slice(-8); // send last 8 messages for context
 
-    const response = await fetch('/api/companion', {
+    const response = await fetch('./api/companion', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
