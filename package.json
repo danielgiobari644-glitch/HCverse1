@@ -4,11 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "node build.js && node dist/server.cjs",
-    "build": "node build.js",
-    "prestart": "npm run build",
-    "start": "node dist/server.cjs",
-    "clean": "rm -rf dist",
+    "dev": "node src/server.js",
+    "build": "echo 'No build phase needed for native ESM'",
+    "start": "node src/server.js",
     "lint": "echo 'Vanilla JS - no lint required'"
   },
   "dependencies": {

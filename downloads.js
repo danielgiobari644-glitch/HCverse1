@@ -116,49 +116,6 @@ export function renderDownloads(state) {
         ` : ''}
       </div>
 
-      <!-- Progressive Web App Setup block -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="glass p-6 rounded-3xl border border-purple-500/10 md:col-span-2 relative overflow-hidden flex flex-col justify-between space-y-6">
-          <div class="space-y-3">
-            <div class="flex items-center gap-2 select-none">
-              <span class="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse"></span>
-              <span class="text-[10px] font-bold text-purple-300 font-mono uppercase tracking-widest">Active Installation Engine</span>
-            </div>
-            <h3 class="text-sm font-bold text-white font-['Space_Grotesk'] tracking-tight">Direct Interactive PWA Installer</h3>
-            <p class="text-xs text-muted-foreground leading-relaxed">
-              Run HCVerse as a completely standalone companion utility directly on your desktop or android screen utilizing standard browser Progressive Web App framework. No app store login required.
-            </p>
-          </div>
-
-          <div class="flex flex-wrap gap-3 select-none">
-            <button id="pwa-trigger-direct-install" class="bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs py-3 px-5 rounded-2xl shadow-lg hover-lift btn-press cursor-pointer flex items-center gap-2 transition-all">
-              🌐 Install Web App On This Device
-            </button>
-          </div>
-        </div>
-
-        <div class="glass p-6 rounded-3xl border border-purple-500/10 flex flex-col justify-between space-y-4">
-          <h4 class="text-[10px] text-[#A78BFA] font-bold font-mono uppercase tracking-wider">// PLATFORM COMPATIBILITY</h4>
-          <div class="space-y-2 py-1">
-            <div class="flex justify-between items-center text-xs">
-              <span class="text-muted-foreground">Android OS</span>
-              <span class="text-[#34d399] font-medium font-mono text-[10px] bg-green-500/10 px-1.5 py-0.5 rounded">Native / APK</span>
-            </div>
-            <div class="flex justify-between items-center text-xs">
-              <span class="text-muted-foreground">Apple iOS</span>
-              <span class="text-[#38bdf8] font-medium font-mono text-[10px] bg-blue-500/10 px-1.5 py-0.5 rounded">Safari Safari shell</span>
-            </div>
-            <div class="flex justify-between items-center text-xs">
-              <span class="text-muted-foreground">Windows / Linux</span>
-              <span class="text-[#f472b6] font-medium font-mono text-[10px] bg-pink-500/10 px-1.5 py-0.5 rounded">Edge / Chrome Shell</span>
-            </div>
-          </div>
-          <div class="text-[10px] text-muted-foreground font-serif leading-relaxed bg-[#11111A]/60 p-3 rounded-xl border border-white/[0.02]">
-            * Immediate download launches file saving prompts instantly.
-          </div>
-        </div>
-      </div>
-
       <!-- Main downloadable catalog -->
       <div class="space-y-4 text-left">
         <h3 class="text-sm font-bold text-white uppercase tracking-wider font-['Space_Grotesk']">// Launchable Packages & Direct Installers</h3>

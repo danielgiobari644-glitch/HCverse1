@@ -6,13 +6,23 @@ on:
       - main
       - master
 
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
   build-and-deploy:
-    concurrency: ci-${{ github.ref }}
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
@@ -29,9 +39,14 @@ jobs:
       - name: Build Production Assets 🏗️
         run: npm run build
 
-      - name: Deploy static assets to gh-pages branch 🚀
-        uses: JamesIves/github-pages-deploy-action@v4
+      - name: Setup Pages ⚙️
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact 📂
+        uses: actions/upload-pages-artifact@v3
         with:
-          folder: dist
-          branch: gh-pages
-          clean: true
+          path: './dist'
+
+      - name: Deploy to GitHub Pages 🚀
+        id: deployment
+        uses: actions/deploy-pages@v4

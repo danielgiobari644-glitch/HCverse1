@@ -5,6 +5,7 @@
 
 import express from "express";
 import path from "path";
+import fs from "fs";
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 
@@ -149,11 +150,26 @@ Use Markdown formatting beautifully: wrap Bible references in bold, like **Prove
     res.send(dummyZip);
   });
 
-  // Serve Frontend assets statically out of compiled dist/ folder directly
-  const distPath = path.join(process.cwd(), "dist");
-  app.use(express.static(distPath));
+  // Dynamic Firebase config endpoint to support unbundled direct ES Module imports in-browser
+  app.get("/src/firebase-config.js", (req, res) => {
+    try {
+      const configPath = path.join(process.cwd(), "firebase-applet-config.json");
+      let configContent = "{}";
+      if (fs.existsSync(configPath)) {
+        configContent = fs.readFileSync(configPath, "utf8");
+      }
+      res.setHeader("Content-Type", "application/javascript");
+      res.send(`export default ${configContent};`);
+    } catch (e) {
+      res.setHeader("Content-Type", "application/javascript");
+      res.send(`export default {};`);
+    }
+  });
+
+  // Serve Frontend assets statically out of workspace root folder directly
+  app.use(express.static(process.cwd()));
   app.get("*", (req, res) => {
-    res.sendFile(path.join(distPath, "index.html"));
+    res.sendFile(path.join(process.cwd(), "index.html"));
   });
 
   app.listen(PORT, "0.0.0.0", () => {

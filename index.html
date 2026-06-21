@@ -79,8 +79,20 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Compiled layout stylesheets -->
-    <link rel="stylesheet" href="./bundle.css?v=v_1782023925" />
+    <!-- Tailwind CSS v4 Play CDN / Browser Compiler -->
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" type="text/tailwindcss" href="./src/index.css" />
+
+    <!-- Browser ESM Import Maps for Firebase -->
+    <script type="importmap">
+      {
+        "imports": {
+          "firebase/app": "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js",
+          "firebase/auth": "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js",
+          "firebase/firestore": "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js"
+        }
+      }
+    </script>
   </head>
   <body class="bg-[#07070B] text-white antialiased min-h-screen font-['Inter',_sans-serif] selection:bg-purple-500/30 selection:text-white">
     <!-- Ambient backgrounds: Celestial Moving Beams & Depth layers -->
@@ -112,6 +124,6 @@
 
 
 
-    <script type="module" src="./bundle.js?v=v_1782023925"></script>
+    <script type="module" src="./src/main.js"></script>
   </body>
 </html>
