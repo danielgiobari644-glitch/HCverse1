@@ -15,16 +15,36 @@ const BUILD_VERSION = 'v_' + Math.floor(Date.now() / 1000);
 console.log('--- Starting HCVerse Built-In Compiler ---');
 console.log('Build version:', BUILD_VERSION);
 
+// Ensure a fallback firebase-applet-config.json exists for CI and build resilience
+const configPath = path.join(PROJECT_ROOT, 'firebase-applet-config.json');
+if (!fs.existsSync(configPath)) {
+  console.log('No firebase-applet-config.json found. Writing a placeholder config to prevent build failures...');
+  const placeholderConfig = {
+    apiKey: "placeholder-api-key",
+    authDomain: "placeholder-auth.firebaseapp.com",
+    projectId: "placeholder-project-id",
+    storageBucket: "placeholder-storage.appspot.com",
+    messagingSenderId: "000000000000",
+    appId: "1:000000000000:web:0000000000000000000000"
+  };
+  fs.writeFileSync(configPath, JSON.stringify(placeholderConfig, null, 2), 'utf8');
+}
+
 // 1. Recreate clean distribution target
 if (fs.existsSync(DIST_DIR)) {
   fs.rmSync(DIST_DIR, { recursive: true, force: true });
 }
 fs.mkdirSync(DIST_DIR, { recursive: true });
 
+// Create .nojekyll in dist and root to prevent GitHub Pages Jekyll processing issues
+fs.writeFileSync(path.join(DIST_DIR, '.nojekyll'), '', 'utf8');
+fs.writeFileSync(path.join(PROJECT_ROOT, '.nojekyll'), '', 'utf8');
+console.log('Created .nojekyll in root and dist to bypass GitHub Pages Jekyll rendering issues.');
+
 // 2. Compile CSS via Tailwind CLI
 console.log('Compiling stylesheet via Tailwind CLI...');
 try {
-  execSync('npx @tailwindcss/cli -i index.css -o dist/bundle.css --minify', { stdio: 'inherit' });
+  execSync('npx @tailwindcss/cli -i src/index.css -o dist/bundle.css --minify', { stdio: 'inherit' });
   fs.copyFileSync(path.join(DIST_DIR, 'bundle.css'), path.join(PROJECT_ROOT, 'bundle.css'));
   console.log('Tailwind compiled successfully.');
 } catch (error) {
@@ -35,7 +55,7 @@ try {
 console.log('Bundling client-side scripts via esbuild...');
 try {
   esbuild.buildSync({
-    entryPoints: [path.join(PROJECT_ROOT, 'main.js')],
+    entryPoints: [path.join(PROJECT_ROOT, 'src', 'main.js')],
     bundle: true,
     minify: true,
     sourcemap: true,
@@ -66,7 +86,7 @@ try {
 console.log('Bundling backend server code...');
 try {
   esbuild.buildSync({
-    entryPoints: [path.join(PROJECT_ROOT, 'server.js')],
+    entryPoints: [path.join(PROJECT_ROOT, 'src', 'server.js')],
     bundle: true,
     platform: 'node',
     format: 'cjs',
@@ -80,26 +100,7 @@ try {
   process.exit(1);
 }
 
-// 5. Copy and dynamically update static PWA assets with cache version
-console.log('Deploying static PWA modules with cache version injection...');
-try {
-  fs.copyFileSync(
-    path.join(PROJECT_ROOT, 'manifest.json'),
-    path.join(DIST_DIR, 'manifest.json')
-  );
-  
-  // Cleanly replace CACHE_NAME inside sw.js in-place and copy versioned sw.js to dist
-  let swContent = fs.readFileSync(path.join(PROJECT_ROOT, 'sw.js'), 'utf8');
-  swContent = swContent.replace(/const CACHE_NAME = 'hcverse-pwa-cache-[^']+';/, `const CACHE_NAME = 'hcverse-pwa-cache-${BUILD_VERSION}';`);
-  
-  fs.writeFileSync(path.join(PROJECT_ROOT, 'sw.js'), swContent, 'utf8');
-  fs.writeFileSync(path.join(DIST_DIR, 'sw.js'), swContent, 'utf8');
-  console.log('PWA ServiceWorker updated with cache name:', `hcverse-pwa-cache-${BUILD_VERSION}`);
-} catch (error) {
-  console.error('PWA assets transfer failed:', error);
-}
-
-// 6. Preprocess index.html to load dist sources & register Service Worker (with cache-busting params)
+// 5. Preprocess index.html to load dist sources (with cache-busting params)
 console.log('Preprocessing index.html...');
 try {
   let html = fs.readFileSync(path.join(PROJECT_ROOT, 'index.html'), 'utf8');

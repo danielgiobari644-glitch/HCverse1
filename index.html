@@ -80,20 +80,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Compiled layout stylesheets -->
-    <link rel="stylesheet" href="./bundle.css" />
-    <!-- PWA Application Manifest specifications -->
-    <link rel="manifest" href="./manifest.json" />
-
-    <!-- Service Worker background sync & offline cache activation -->
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('./sw.js')
-            .then(reg => console.log('[PWA] ServiceWorker registered scope:', reg.scope))
-            .catch(err => console.warn('[PWA] ServiceWorker register failed:', err));
-        });
-      }
-    </script>
+    <link rel="stylesheet" href="./bundle.css?v=v_1782023925" />
   </head>
   <body class="bg-[#07070B] text-white antialiased min-h-screen font-['Inter',_sans-serif] selection:bg-purple-500/30 selection:text-white">
     <!-- Ambient backgrounds: Celestial Moving Beams & Depth layers -->
@@ -123,31 +110,8 @@
       </div>
     </div>
 
-    <!-- Beautiful PWA Install / Download Prompt Banner (Floating Modal/Toast) -->
-    <div id="pwa-download-prompt" class="hidden fixed bottom-6 left-6 right-6 md:left-auto md:right-8 md:bottom-8 md:w-96 bg-[#110e2c]/95 backdrop-blur-xl border border-purple-500/30 rounded-2xl p-4.5 shadow-[0_12px_45px_rgba(167,139,250,0.22)] z-[9999] animate-fade-in flex flex-col gap-3.5 border-l-4 border-l-purple-500 text-white select-none">
-      <div class="flex items-start gap-3">
-        <!-- Floating cross emblem -->
-        <div class="w-10 h-10 rounded-xl bg-purple-500/15 border border-purple-400/35 flex items-center justify-center text-xl flex-shrink-0 text-purple-400 animate-pulse">
-          ✝
-        </div>
-        <div class="flex-grow text-left">
-          <h4 class="text-xs font-bold tracking-wide uppercase font-['Space_Grotesk'] text-purple-300">Install HCVerse App</h4>
-          <p id="pwa-prompt-text" class="text-[11px] text-[#b3afdf] leading-relaxed mt-1 font-sans">
-            Add HCVerse to your home screen! Get offline access, faster study tools, and an immersive premium experience.
-          </p>
-        </div>
-        <button id="pwa-prompt-close" class="text-purple-300/80 hover:text-white p-1 text-sm font-semibold cursor-pointer select-none">&times;</button>
-      </div>
-      <div class="flex gap-2.5 items-center">
-        <button id="pwa-prompt-install-btn" class="flex-grow bg-purple-600 hover:bg-purple-500 text-white font-extrabold text-xs py-2 px-3.5 rounded-xl shadow-lg hover-lift btn-press cursor-pointer flex justify-center items-center gap-1.5 transition-all">
-          📲 Get App (Install)
-        </button>
-        <button id="pwa-prompt-dismiss-btn" class="text-[10px] font-bold text-purple-300/80 hover:text-white px-2.5 py-1.5 uppercase tracking-wide cursor-pointer">
-          Maybe Later
-        </button>
-      </div>
-    </div>
 
-    <script type="module" src="./bundle.js"></script>
+
+    <script type="module" src="./bundle.js?v=v_1782023925"></script>
   </body>
 </html>
