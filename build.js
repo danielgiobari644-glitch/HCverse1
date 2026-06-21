@@ -10,8 +10,10 @@ import * as esbuild from 'esbuild';
 
 const PROJECT_ROOT = process.cwd();
 const DIST_DIR = path.join(PROJECT_ROOT, 'dist');
+const BUILD_VERSION = 'v_' + Math.floor(Date.now() / 1000);
 
 console.log('--- Starting HCVerse Built-In Compiler ---');
+console.log('Build version:', BUILD_VERSION);
 
 // 1. Recreate clean distribution target
 if (fs.existsSync(DIST_DIR)) {
@@ -78,30 +80,38 @@ try {
   process.exit(1);
 }
 
-// 5. Copy direct static PWA assets
-console.log('Deploying static PWA modules...');
+// 5. Copy and dynamically update static PWA assets with cache version
+console.log('Deploying static PWA modules with cache version injection...');
 try {
   fs.copyFileSync(
     path.join(PROJECT_ROOT, 'manifest.json'),
     path.join(DIST_DIR, 'manifest.json')
   );
-  fs.copyFileSync(
-    path.join(PROJECT_ROOT, 'sw.js'),
-    path.join(DIST_DIR, 'sw.js')
-  );
-  console.log('Copied manifest.json and sw.js to dist/');
+  
+  // Cleanly replace CACHE_NAME inside sw.js in-place and copy versioned sw.js to dist
+  let swContent = fs.readFileSync(path.join(PROJECT_ROOT, 'sw.js'), 'utf8');
+  swContent = swContent.replace(/const CACHE_NAME = 'hcverse-pwa-cache-[^']+';/, `const CACHE_NAME = 'hcverse-pwa-cache-${BUILD_VERSION}';`);
+  
+  fs.writeFileSync(path.join(PROJECT_ROOT, 'sw.js'), swContent, 'utf8');
+  fs.writeFileSync(path.join(DIST_DIR, 'sw.js'), swContent, 'utf8');
+  console.log('PWA ServiceWorker updated with cache name:', `hcverse-pwa-cache-${BUILD_VERSION}`);
 } catch (error) {
   console.error('PWA assets transfer failed:', error);
 }
 
-// 6. Preprocess index.html to load dist sources & register Service Worker
+// 6. Preprocess index.html to load dist sources & register Service Worker (with cache-busting params)
 console.log('Preprocessing index.html...');
 try {
   let html = fs.readFileSync(path.join(PROJECT_ROOT, 'index.html'), 'utf8');
   
-  // Save preprocessed directly as-is to dist as well
+  // Dynamically replace with the current BUILD_VERSION to force browsers/caches to reload the new bundles
+  html = html.replace(/href="\.\/bundle\.css(\?v=[^"]+)?"/g, `href="./bundle.css?v=${BUILD_VERSION}"`);
+  html = html.replace(/src="\.\/bundle\.js(\?v=[^"]+)?"/g, `src="./bundle.js?v=${BUILD_VERSION}"`);
+  
+  // Save the preprocessed index.html globally and to dist
+  fs.writeFileSync(path.join(PROJECT_ROOT, 'index.html'), html, 'utf8');
   fs.writeFileSync(path.join(DIST_DIR, 'index.html'), html, 'utf8');
-  console.log('index.html integrated successfully.');
+  console.log('index.html integrated and cache-busted successfully with:', BUILD_VERSION);
 } catch (error) {
   console.error('HTML preprocessing failed:', error);
   process.exit(1);

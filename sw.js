@@ -54,7 +54,7 @@ self.addEventListener('fetch', event => {
   }
 
   event.respondWith(
-    caches.match(event.request).then(cachedResponse => {
+    caches.match(event.request, { ignoreSearch: true }).then(cachedResponse => {
       if (cachedResponse) {
         // Fetch new assets lazily in background to update cache (stale-while-revalidate)
         fetch(event.request).then(networkResponse => {
@@ -80,7 +80,7 @@ self.addEventListener('fetch', event => {
       }).catch(() => {
         // Fallback to cached index.html for SPA router support when user is totally offline
         if (event.request.headers.get('accept').includes('text/html')) {
-          return caches.match('./index.html');
+          return caches.match('./index.html', { ignoreSearch: true });
         }
       });
     })
